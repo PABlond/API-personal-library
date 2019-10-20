@@ -1,22 +1,26 @@
 "use strict"
 
-var express = require("express")
-var bodyParser = require("body-parser")
-var cors = require("cors")
+const express = require("express")
+const bodyParser = require("body-parser")
+const cors = require("cors")
 
-var apiRoutes = require("./routes/api.js")
-var fccTestingRoutes = require("./routes/fcctesting.js")
-var runner = require("./test-runner")
-const mongoose = require('mongoose')
+const apiRoutes = require("./routes/api.js")
+const fccTestingRoutes = require("./routes/fcctesting.js")
+const runner = require("./test-runner")
+const helmet = require("helmet")
+const mongoose = require("mongoose")
 require("dotenv").config()
 
-const {MONGO_PASSWORD, MONGO_USER} = process.env
-mongoose.connect(`mongodb://${MONGO_USER}:${MONGO_PASSWORD}@ds137008.mlab.com:37008/stock-checker`, {useNewUrlParser: true});
+const { MONGO_PASSWORD, MONGO_USER } = process.env
+mongoose.connect(
+  `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@ds137008.mlab.com:37008/stock-checker`,
+  { useNewUrlParser: true }
+)
 
-var app = express()
+const app = express()
 
 app.use("/public", express.static(process.cwd() + "/public"))
-
+app.use(helmet.hidePoweredBy({ setTo: "PHP 4.2.0" }))
 app.use(cors({ origin: "*" })) //USED FOR FCC TESTING PURPOSES ONLY!
 
 app.use(bodyParser.json())
@@ -50,7 +54,7 @@ app.listen(process.env.PORT || 3000, function() {
       try {
         runner.run()
       } catch (e) {
-        var error = e
+        const error = e
         console.log("Tests are not valid:")
         console.log(error)
       }
