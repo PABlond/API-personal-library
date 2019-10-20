@@ -28,20 +28,7 @@ suite("Functional Tests", function() {
    * ----[EXAMPLE TEST]----
    * Each test should completely test the response of the API end-point including response status code!
    */
-  test("#example Test GET /api/books", function(done) {
-    chai
-      .request(server)
-      .get("/api/books")
-      .end(function(err, res) {
-        assert.equal(res.status, 201)
-        assert.isArray(res.body, "response should be an array")
-        assert.equal(res.body.length, 0)
-        done()
-      })
-  })
-  /*
-   * ----[END of EXAMPLE TEST]----
-   */
+  const title = "A sample title"
 
   suite("Routing tests", function() {
     suite(
@@ -51,7 +38,7 @@ suite("Functional Tests", function() {
           chai
             .request(server)
             .post("/api/books")
-            .send({ title: "A sample title" })
+            .send({ title })
             .end(function(err, res) {
               assert.equal(res.status, 201)
               assert.isNotArray(res.body, "response should not  be an array")
@@ -101,7 +88,6 @@ suite("Functional Tests", function() {
             assert.equal(res.body[0].title, "A sample title")
             done()
           })
-        //done();
       })
     })
 
@@ -122,8 +108,7 @@ suite("Functional Tests", function() {
           .request(server)
           .get("/api/books")
           .end(function(err, res) {
-            const { title, _id } = res.body[0];
-            console.log({_id})
+            const { _id } = res.body[0];
             chai
               .request(server)
               .get(`/api/books/${_id}`)
@@ -148,7 +133,7 @@ suite("Functional Tests", function() {
           .request(server)
           .get("/api/books")
           .end(function(err, res) {
-            const { title, _id } = res.body[0];
+            const { _id } = res.body[0];
             chai
               .request(server)
               .post(`/api/books/${_id}`)
